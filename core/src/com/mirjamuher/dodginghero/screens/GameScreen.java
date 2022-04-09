@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.mirjamuher.dodginghero.DodgingHero;
 import com.mirjamuher.dodginghero.Resources;
 import com.mirjamuher.dodginghero.graph.Background;
+import com.mirjamuher.dodginghero.graph.SizeEvaluator;
 
 public class GameScreen extends DefaultScreen {
     SpriteBatch batch;
@@ -15,6 +16,12 @@ public class GameScreen extends DefaultScreen {
     public static final int SCREEN_W = 12 * Resources.TILE_SIZE;  // 192 pixels
     public static final int SCREEN_H = 8 * Resources.TILE_SIZE;  // 122 pixels
 
+    // for getting the bases positioned
+    public static final int MAX_BASES_X_DIR = 3;
+    public static final int MAX_BASES_Y_DIR = 3;
+    private SizeEvaluator sizeEvaluator;
+
+    // for rendering
     private Stage gameStage;
     private Background bg;
 
@@ -28,6 +35,23 @@ public class GameScreen extends DefaultScreen {
 
         // create Background object
         bg = new Background();
+
+        // creates sizeEvaluator
+        sizeEvaluator = new SizeEvaluator(gameStage, game.res, MAX_BASES_X_DIR, MAX_BASES_Y_DIR);
+    }
+
+    public void drawBases() {
+        batch.begin();
+        // draw max_base_x + 1 rows of bases consisting of max_base_y + 1 columns of bases --> draw 4x4 bases
+        for (int x = 0; x <= MAX_BASES_X_DIR; x++) {
+            for (int y = 0; y <= MAX_BASES_Y_DIR; y++) {
+                batch.draw(game.res.base, sizeEvaluator.getBaseX(x), sizeEvaluator.getBaseY(y));
+            }
+        }
+        // temporary:
+        batch.draw(game.res.player, sizeEvaluator.getBaseX(1), sizeEvaluator.getBaseY(1) + 2);
+
+        batch.end();
     }
 
     @Override
@@ -39,6 +63,7 @@ public class GameScreen extends DefaultScreen {
 
         // First draw background, then the stage
         bg.draw(gameStage, game.res);
+        drawBases();
         gameStage.draw();
     }
 
