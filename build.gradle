@@ -9,8 +9,7 @@ buildscript {
         google()
     }
     dependencies {
-        
-
+        classpath "com.badlogicgames.gdx:gdx-tools:1.10.0"
     }
 }
 
@@ -49,7 +48,7 @@ project(":desktop") {
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllersVersion"
-        
+        api "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
     }
 }
 
