@@ -11,6 +11,7 @@ import com.mirjamuher.dodginghero.DodgingHero;
 import com.mirjamuher.dodginghero.Resources;
 import com.mirjamuher.dodginghero.graph.Background;
 import com.mirjamuher.dodginghero.graph.SizeEvaluator;
+import com.mirjamuher.dodginghero.graph.effects.WarningEffect;
 import com.mirjamuher.dodginghero.logic.GameLogic;
 import com.mirjamuher.dodginghero.logic.objects.Player;
 
@@ -49,6 +50,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
         // tell gdx that GameScreen handels user input
         Gdx.input.setInputProcessor(this);
+
+        // temporary
+        WarningEffect.Create(0, 0, gameLogic.getEffectEngine(), sizeEvaluator, game.res);
     }
 
     public void drawBases() {
@@ -72,6 +76,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
         // First draw background, then the stage
         bg.draw(gameStage, game.res);
         drawBases();
+        gameLogic.getEffectEngine().draw(batch);
 
         batch.begin();
         player.draw(batch);
@@ -82,6 +87,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
     public void update(float delta) {
         gameStage.act(delta);  // updates each actor in gameStage based on time since last call (delta)
+        gameLogic.update(delta);  // updates gamelogic (effects so far)
     }
 
     @Override

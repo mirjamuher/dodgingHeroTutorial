@@ -10,6 +10,7 @@ public class Resources {
     public TextureRegion ground;
     public TextureRegion wall;
     public TextureRegion base;
+    public TextureRegion warning;
 
     // Player is a Sprite
     public Sprite player;
@@ -22,6 +23,7 @@ public class Resources {
         ground = gameSprites.findRegion("ground");
         wall = gameSprites.findRegion("wall");
         base = gameSprites.findRegion("base");
+        warning = gameSprites.findRegion("warning");
 
         player = new Sprite(gameSprites.findRegion("player"));
     }
