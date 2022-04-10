@@ -1,6 +1,6 @@
 
 game.png
-size: 128, 32
+size: 1024, 1024
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
@@ -11,37 +11,51 @@ base
   orig: 16, 2
   offset: 0, 0
   index: -1
+game_font
+  rotate: false
+  xy: 2, 42
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
 ground
   rotate: false
-  xy: 2, 6
+  xy: 2, 24
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 player
   rotate: false
-  xy: 20, 6
+  xy: 516, 538
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 spider
   rotate: false
-  xy: 38, 6
+  xy: 2, 6
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 wall
   rotate: false
-  xy: 56, 6
+  xy: 20, 24
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 warning
   rotate: false
-  xy: 74, 6
+  xy: 516, 520
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+warning_new
+  rotate: false
+  xy: 534, 538
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

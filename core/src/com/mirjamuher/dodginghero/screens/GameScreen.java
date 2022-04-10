@@ -3,15 +3,16 @@ package com.mirjamuher.dodginghero.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.mirjamuher.dodginghero.DodgingHero;
 import com.mirjamuher.dodginghero.Resources;
 import com.mirjamuher.dodginghero.graph.Background;
 import com.mirjamuher.dodginghero.graph.SizeEvaluator;
-import com.mirjamuher.dodginghero.graph.effects.WarningEffect;
 import com.mirjamuher.dodginghero.logic.GameLogic;
 import com.mirjamuher.dodginghero.logic.objects.Player;
 
@@ -69,12 +70,42 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
         gameLogic.getEnemy().draw(batch, sizeEvaluator);  // logic will be swapping enemies, that's why we just get enemy here
         batch.end();
 
+        // draw writing
+        drawUI();
+
         gameStage.draw();
+    }
+
+    public void drawUI() {
+        batch.begin();
+        drawShadowedText("LIVES:" + player.getLives(), 5, gameStage.getHeight() - 7, gameStage.getWidth(), Align.left, Color.WHITE);
+        if (player.getLives() <= 0) {
+            drawShadowedText("DEFEAT!", 0, gameStage.getViewport().getScreenY() + gameStage.getHeight() / 2, gameStage.getWidth(), Align.center, Color.RED);
+        }
+        batch.end();
+    }
+
+    private void drawShadowedText(String str, float xPos, float yPos, float width, int align, Color color) {
+        // draw thick shadow first
+        game.res.gameFont.setColor(Color.BLACK);
+        for (int i = -1; i < 2; i ++) {
+            for (int j = -1; j < 2; j++) {
+                game.res.gameFont.draw(batch, str, xPos + i, yPos + j, width, align, false);
+            }
+        }
+
+        // draw actual lettering with specified colour
+        game.res.gameFont.setColor(color);
+        game.res.gameFont.draw(batch, str, xPos, yPos, width, align, false);
     }
 
     public void update(float delta) {
         gameStage.act(delta);  // updates each actor in gameStage based on time since last call (delta)
-        gameLogic.update(delta);  // updates gamelogic (effects so far)
+
+        // if gameover, stop updating game logic
+        if (player.getLives() > 0) {
+            gameLogic.update(delta);  // updates gamelogic (effects so far)
+        }
     }
 
     public void drawBases() {
@@ -96,7 +127,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
     public void attemptMove(int dx, int dy) {
         // if player can legally move, assign new position and move sprite
-        if (gameLogic.CanMove(player.getBaseNumX() + dx, player.getBaseNumY() + dy)) {
+        // if player is out of lives, lock movement
+        if (player.getLives() > 0 && gameLogic.CanMove(player.getBaseNumX() + dx, player.getBaseNumY() + dy)) {
             gameLogic.AssignPlayerPosition(player.getBaseNumX() + dx, player.getBaseNumY() + dy);
         }
     }

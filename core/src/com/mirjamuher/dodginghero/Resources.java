@@ -1,6 +1,7 @@
 package com.mirjamuher.dodginghero;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -11,6 +12,8 @@ public class Resources {
     public TextureRegion wall;
     public TextureRegion base;
     public TextureRegion warning;
+
+    public BitmapFont gameFont;
 
     // Player is a Sprite
     public Sprite player;
@@ -24,7 +27,9 @@ public class Resources {
         ground = gameSprites.findRegion("ground");
         wall = gameSprites.findRegion("wall");
         base = gameSprites.findRegion("base");
-        warning = gameSprites.findRegion("warning");
+        warning = gameSprites.findRegion("warning_new");
+
+        gameFont = new BitmapFont(Gdx.files.internal("gamefont16.fnt"), Gdx.files.internal("gamefont16.png"), false);
 
         player = new Sprite(gameSprites.findRegion("player"));
         enemy = new Sprite(gameSprites.findRegion("spider"));
