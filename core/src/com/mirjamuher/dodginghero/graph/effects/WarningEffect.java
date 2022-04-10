@@ -11,21 +11,29 @@ public class WarningEffect extends Effect{
     private int fieldY;
     private Resources resources;
 
-    public static WarningEffect Create(int fx, int fy, EffectEngine parent, Resources res) {
+    // interface to alert gameLogic that warningEffect has ended (and player might get hurt)
+    public interface WarningEffectListener {
+        public void onEffectOver(WarningEffect effect);
+    }
+
+    private WarningEffectListener warningEffectListener;
+
+    public static WarningEffect Create(int fx, int fy, EffectEngine parent, Resources res, WarningEffectListener listener) {
         WarningEffect effect = warningPool.obtain();
-        effect.init(fx, fy, parent, res);
+        effect.init(fx, fy, parent, res, listener);
         return effect;
     }
 
     public WarningEffect() {
     }
 
-    public void init(int fx, int fy, EffectEngine parent, Resources res) {
+    public void init(int fx, int fy, EffectEngine parent, Resources res, WarningEffectListener listener) {
         super.init(parent);
         // fake constructor because on pool-resource one can't call actual constructor (because it's already constructed)
         fieldX = fx;
         fieldY = fy;
         resources = res;
+        warningEffectListener = listener;
     }
 
     @Override
@@ -38,10 +46,21 @@ public class WarningEffect extends Effect{
     @Override
     public void update (float delta) {
         super.update(delta);
-        // if our object has been alive for 2 seconds, release it
-        if (timeAlive > WARNING_TIME) {
+        // if our WarnEffect has been alive for 2 seconds, release it and call warnEffectListener interface
+        if (timeAlive > WARNING_TIME && isAlive) {
             isAlive = false;
+            if (warningEffectListener != null) {
+                warningEffectListener.onEffectOver(this);
+            }
         }
+    }
+
+    public int getFieldX() {
+        return fieldX;
+    }
+
+    public int getFieldY() {
+        return fieldY;
     }
 
     @Override

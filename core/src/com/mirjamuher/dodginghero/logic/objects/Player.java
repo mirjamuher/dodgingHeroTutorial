@@ -9,10 +9,13 @@ public class Player extends Sprite {
     private int baseNumX;  // X position of Player
     private int baseNumY;  // Y position of Player
 
-    public Player(int fx, int fy, Resources res) {
+    private int lives;
+
+    public Player(int fx, int fy, Resources res, int lives) {
         baseNumX = fx;
         baseNumY = fy;
         set(res.player); // makes this sprite a copy in every way of specified sprite
+        this.lives = lives;
     }
 
     public int getBaseNumX() {
@@ -29,6 +32,17 @@ public class Player extends Sprite {
 
     public void setBaseNumY(int fy) {
         baseNumY = fy;
+    }
+
+    public int getLives() {
+        return lives;
+    }
+
+    public void takeDamage(int val) {
+        lives -= val;
+        if (lives <= 0) {
+            lives = 0;
+        }
     }
 
     public void draw(SpriteBatch batch, SizeEvaluator sizeEvaluator) {
