@@ -68,6 +68,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
         batch.begin();
         player.draw(batch, sizeEvaluator);
+        gameLogic.getEnemy().draw(batch, sizeEvaluator);  // logic will be swapping enemies, that's why we just get enemy here
         batch.end();
 
         gameStage.draw();

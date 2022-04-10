@@ -7,7 +7,7 @@ import com.mirjamuher.dodginghero.graph.SizeEvaluator;
 
 public class Enemy extends Sprite {
 
-    Enemy(Resources res) {
+    public Enemy(Resources res) {
         set(res.enemy);
     }
 

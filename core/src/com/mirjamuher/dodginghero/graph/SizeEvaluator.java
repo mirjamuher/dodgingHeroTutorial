@@ -51,6 +51,6 @@ public class SizeEvaluator {
     }
 
     public float getEnemyY(Sprite enemy) {
-       return (measuredStage.getHeight() / 2 - enemy.getWidth() / 2);
+       return (measuredStage.getHeight() / 2 - enemy.getHeight() / 2);
     }
 }
