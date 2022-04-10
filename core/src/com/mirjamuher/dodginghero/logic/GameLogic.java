@@ -3,10 +3,11 @@ package com.mirjamuher.dodginghero.logic;
 import com.badlogic.gdx.math.MathUtils;
 import com.mirjamuher.dodginghero.DodgingHero;
 import com.mirjamuher.dodginghero.graph.effects.EffectEngine;
+import com.mirjamuher.dodginghero.graph.effects.WarningEffect;
 import com.mirjamuher.dodginghero.logic.objects.Enemy;
 import com.mirjamuher.dodginghero.logic.objects.Player;
 
-public class GameLogic {
+public class GameLogic implements Enemy.EnemyAttackListener {
     // sets maximum number of bases
     public static final int NUM_OF_BASES_X = 3;
     public static final int NUM_OF_BASES_Y = 3;
@@ -20,7 +21,7 @@ public class GameLogic {
         this.game = game;
         // generates player at a random location of the tiles
         player = new Player(MathUtils.random(NUM_OF_BASES_X), MathUtils.random(NUM_OF_BASES_Y), game.res);
-        enemy = new Enemy(game.res);
+        enemy = new Enemy(game.res, this);
         effectEngine = new EffectEngine();
     }
 
@@ -43,12 +44,28 @@ public class GameLogic {
         return enemy;
     }
 
+    @Override
+    public void onAttack(boolean[][] tiles) {
+        // from Enemy interface
+
+        for (int x = 0; x < tiles.length; x++) {
+            for (int y = 0; y < tiles[x].length; y++){
+                if (tiles[x][y]) {
+                    WarningEffect.Create(x, y, effectEngine, game.res);
+                }
+            }
+        }
+    }
+
     // Effect Logic
     public void update(float delta) {
         effectEngine.update(delta);
+        enemy.update(delta);
     }
 
     public EffectEngine getEffectEngine() {
         return effectEngine;
     }
+
+
 }

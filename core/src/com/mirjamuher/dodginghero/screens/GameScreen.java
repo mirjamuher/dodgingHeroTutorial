@@ -49,9 +49,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
         // tell gdx that GameScreen handels user input
         Gdx.input.setInputProcessor(this);
-
-        // temporary
-        WarningEffect.Create(0, 0, gameLogic.getEffectEngine(), sizeEvaluator, game.res);
     }
 
     @Override
@@ -61,11 +58,12 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // First draw background, then the stage
+        // First draw background, then the stage, then effects
         bg.draw(gameStage, game.res);
         drawBases();
-        gameLogic.getEffectEngine().draw(batch);
+        gameLogic.getEffectEngine().draw(batch, sizeEvaluator);
 
+        // draw sprites
         batch.begin();
         player.draw(batch, sizeEvaluator);
         gameLogic.getEnemy().draw(batch, sizeEvaluator);  // logic will be swapping enemies, that's why we just get enemy here
