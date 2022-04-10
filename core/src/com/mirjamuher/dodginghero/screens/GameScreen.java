@@ -17,6 +17,7 @@ import com.mirjamuher.dodginghero.logic.objects.Player;
 
 public class GameScreen extends DefaultScreen implements InputProcessor {
     SpriteBatch batch;
+
     // 8 tile height & 12 tile width
     public static final int SCREEN_W = 12 * Resources.TILE_SIZE;  // 192 pixels
     public static final int SCREEN_H = 8 * Resources.TILE_SIZE;  // 122 pixels
@@ -32,7 +33,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
     public GameScreen(DodgingHero game) {
         super(game);
-        batch = new SpriteBatch();  // responsible for sending command sto the video card (e.g. rendering things)
+        batch = new SpriteBatch();  // responsible for sending command to the video card (e.g. rendering things)
 
         // set gameStage to keep track of camera, spriteBatch, root group
         ExtendViewport viewport = new ExtendViewport(SCREEN_W, SCREEN_H);   // Viewport manages camera and controls how stage is displayed on screen. ExtendedViewport is one of the types
@@ -40,30 +41,17 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
         // initialise helper functions
         sizeEvaluator = new SizeEvaluator(gameStage, game.res, GameLogic.NUM_OF_BASES_X, GameLogic.NUM_OF_BASES_Y);
-        gameLogic = new GameLogic();
+        gameLogic = new GameLogic(game);
         player = gameLogic.getPlayer();
 
         // create sprite objects
         bg = new Background();
-        player.set(game.res.player);  // makes sprite a copy of the game.res.player sprite
-        refreshPlayer(); // sets position of sprite in line with correct base
 
         // tell gdx that GameScreen handels user input
         Gdx.input.setInputProcessor(this);
 
         // temporary
         WarningEffect.Create(0, 0, gameLogic.getEffectEngine(), sizeEvaluator, game.res);
-    }
-
-    public void drawBases() {
-        batch.begin();
-        // draw max_base_x + 1 rows of bases consisting of max_base_y + 1 columns of bases --> draw 4x4 bases
-        for (int x = 0; x <= GameLogic.NUM_OF_BASES_X; x++) {
-            for (int y = 0; y <= GameLogic.NUM_OF_BASES_Y; y++) {
-                batch.draw(game.res.base, sizeEvaluator.getBaseX(x), sizeEvaluator.getBaseY(y));
-            }
-        }
-        batch.end();
     }
 
     @Override
@@ -79,7 +67,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
         gameLogic.getEffectEngine().draw(batch);
 
         batch.begin();
-        player.draw(batch);
+        player.draw(batch, sizeEvaluator);
         batch.end();
 
         gameStage.draw();
@@ -90,22 +78,27 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
         gameLogic.update(delta);  // updates gamelogic (effects so far)
     }
 
+    public void drawBases() {
+        batch.begin();
+        // draw max_base_x + 1 rows of bases consisting of max_base_y + 1 columns of bases --> draw 4x4 bases
+        for (int x = 0; x <= GameLogic.NUM_OF_BASES_X; x++) {
+            for (int y = 0; y <= GameLogic.NUM_OF_BASES_Y; y++) {
+                batch.draw(game.res.base, sizeEvaluator.getBaseX(x), sizeEvaluator.getBaseY(y));
+            }
+        }
+        batch.end();
+    }
+
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
         gameStage.getViewport().update(width, height, true);  // tells gameStage that window was resized and to center the Camera
-        refreshPlayer();
     }
 
-    public void refreshPlayer(){
-        player.setPosition(sizeEvaluator.getBaseX(player.getBaseNumX()), sizeEvaluator.getBaseY(player.getBaseNumY()));
-    }
-
-    public void AttemptMove(int dx, int dy) {
+    public void attemptMove(int dx, int dy) {
         // if player can legally move, assign new position and move sprite
         if (gameLogic.CanMove(player.getBaseNumX() + dx, player.getBaseNumY() + dy)) {
             gameLogic.AssignPlayerPosition(player.getBaseNumX() + dx, player.getBaseNumY() + dy);
-            refreshPlayer();
         }
     }
 
@@ -113,16 +106,16 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
     public boolean keyDown(int keycode) {
         switch (keycode) {
             case Input.Keys.UP:
-                AttemptMove(0, 1);
+                attemptMove(0, 1);
                 break;
             case Input.Keys.DOWN:
-                AttemptMove(0, -1);
+                attemptMove(0, -1);
                 break;
             case Input.Keys.RIGHT:
-                AttemptMove(1, 0);
+                attemptMove(1, 0);
                 break;
             case Input.Keys.LEFT:
-                AttemptMove(-1, 0);
+                attemptMove(-1, 0);
                 break;
         }
         return false;

@@ -1,5 +1,6 @@
 package com.mirjamuher.dodginghero.graph;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mirjamuher.dodginghero.Resources;
 
@@ -23,6 +24,8 @@ public class SizeEvaluator {
        MAX_NUM_BASES_Y = maxBaseY;
    }
 
+   // Player functinality
+
     /**
      *
      * @param crntBaseNumX current index of the base in x direction
@@ -41,4 +44,13 @@ public class SizeEvaluator {
    public float getBaseY(int crntBaseNumY) {
        return measuredStage.getHeight() / 2 - ((Resources.TILE_SIZE + BASE_MARGIN) * 2 / 3.0f) * ((MAX_NUM_BASES_Y + 1) / 2.0f - crntBaseNumY);
    }
+
+   // Enemy functionality
+    public float getEnemyX(Sprite enemy) {
+       return (measuredStage.getWidth() * 3 / 4) - enemy.getWidth() / 2;
+    }
+
+    public float getEnemyY(Sprite enemy) {
+       return (measuredStage.getHeight() / 2 - enemy.getWidth() / 2);
+    }
 }

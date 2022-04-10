@@ -1,6 +1,7 @@
 package com.mirjamuher.dodginghero.logic;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.mirjamuher.dodginghero.DodgingHero;
 import com.mirjamuher.dodginghero.graph.effects.EffectEngine;
 import com.mirjamuher.dodginghero.logic.objects.Player;
 
@@ -9,12 +10,14 @@ public class GameLogic {
     public static final int NUM_OF_BASES_X = 3;
     public static final int NUM_OF_BASES_Y = 3;
 
+    DodgingHero game;
     Player player;
     EffectEngine effectEngine;
 
-    public GameLogic() {
+    public GameLogic(DodgingHero game) {
+        this.game = game;
         // generates player at a random location of the tiles
-        player = new Player(MathUtils.random(NUM_OF_BASES_X), MathUtils.random(NUM_OF_BASES_Y));
+        player = new Player(MathUtils.random(NUM_OF_BASES_X), MathUtils.random(NUM_OF_BASES_Y), game.res);
         effectEngine = new EffectEngine();
     }
 

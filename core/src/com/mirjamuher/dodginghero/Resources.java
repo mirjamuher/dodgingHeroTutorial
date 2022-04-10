@@ -14,6 +14,7 @@ public class Resources {
 
     // Player is a Sprite
     public Sprite player;
+    public Sprite enemy;
 
     public static final int TILE_SIZE = 16;
 
@@ -26,6 +27,7 @@ public class Resources {
         warning = gameSprites.findRegion("warning");
 
         player = new Sprite(gameSprites.findRegion("player"));
+        enemy = new Sprite(gameSprites.findRegion("spider"));
     }
 
     public void dispose() {
