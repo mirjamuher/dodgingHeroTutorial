@@ -3,6 +3,7 @@ package com.mirjamuher.dodginghero.logic.objects;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mirjamuher.dodginghero.Resources;
 import com.mirjamuher.dodginghero.graph.SizeEvaluator;
+import com.mirjamuher.dodginghero.logic.GameProgress;
 
 public class Player extends Character {
     public static final float APPROACH_TIME = 0.5f;
@@ -20,7 +21,7 @@ public class Player extends Character {
         baseNumX = fx;
         baseNumY = fy;
         set(res.player); // makes this sprite a copy in every way of specified sprite
-        max_lives = lives;
+        max_lives = GameProgress.maxPlayerLives;
     }
 
     public int getBaseNumX() {

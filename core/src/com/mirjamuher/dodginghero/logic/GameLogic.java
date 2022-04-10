@@ -1,5 +1,6 @@
 package com.mirjamuher.dodginghero.logic;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.math.MathUtils;
 import com.mirjamuher.dodginghero.DodgingHero;
 import com.mirjamuher.dodginghero.graph.effects.EffectEngine;
@@ -14,7 +15,6 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
     // sets maximum number of bases
     public static final int NUM_OF_BASES_X = 3;
     public static final int NUM_OF_BASES_Y = 3;
-    private static final int DEFAULT_PLAYER_LIVES = 3;
     private static final float BONUS_SPAWN_INTEVAL = 2;
     private static final int MAX_BONUSES_ON_FIELD = 3;
 
@@ -37,7 +37,7 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
     public GameLogic(DodgingHero game, GameEventListener listener) {
         this.game = game;
         // generates player at a random location of the tiles
-        player = new Player(MathUtils.random(NUM_OF_BASES_X), MathUtils.random(NUM_OF_BASES_Y), game.res, DEFAULT_PLAYER_LIVES);
+        player = new Player(MathUtils.random(NUM_OF_BASES_X), MathUtils.random(NUM_OF_BASES_Y), game.res, GameProgress.playerLives);
         enemy = new Enemy(game.res, this);
         effectEngine = new EffectEngine();
         gameEventListener = listener;
@@ -66,8 +66,11 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
             if (currentBonus.getBaseNumX() == fx && currentBonus.getBaseNumY() == fy) {
 
                 if (currentBonus.getBonusType() == Bonus.BONUS_TYPE_ATTACK) {
-                    enemy.takeDamage(1);
+                    enemy.takeDamage(GameProgress.playerDamage);
+                    // if win game condition fulfilled
                     if (enemy.getLives() <= 0) {
+                        GameProgress.currentLevel += 1;
+                        GameProgress.playerLives = player.getLives();
                         player.markVictorious();
                         gameEventListener.onGameEnd(true);
                     }
@@ -154,8 +157,12 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
 
     @Override
     public void onEffectOver(WarningEffect effect) {
+        // when effect is over, if the effect is where the player is, player takes damage
         if (effect.getFieldX() == player.getBaseNumX() && effect.getFieldY() == player.getBaseNumY()) {
             player.takeDamage(1);
+            if (player.getLives() <= 0) {
+                GameProgress.Reset();
+            }
         }
     }
 }

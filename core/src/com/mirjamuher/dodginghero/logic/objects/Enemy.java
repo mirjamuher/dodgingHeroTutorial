@@ -5,10 +5,10 @@ import com.badlogic.gdx.math.MathUtils;
 import com.mirjamuher.dodginghero.Resources;
 import com.mirjamuher.dodginghero.graph.SizeEvaluator;
 import com.mirjamuher.dodginghero.logic.GameLogic;
+import com.mirjamuher.dodginghero.logic.GameProgress;
 
 public class Enemy extends Character {
     private static final float BASE_ATTACK_TIME = 3.0f;
-    private static final int DEFAULT_ENEMY_LIVES = 5;
 
     private static float SCALE_TIME = 0.5f;
 
@@ -25,7 +25,7 @@ public class Enemy extends Character {
     private EnemyAttackListener attackListener;
 
     public Enemy(Resources res, EnemyAttackListener listener) {
-        super(DEFAULT_ENEMY_LIVES);
+        super(GameProgress.getEnemyLives());
         set(res.enemy);
         resetAttackTime();
         attackListener = listener;
