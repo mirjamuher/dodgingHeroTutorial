@@ -10,6 +10,8 @@ public class Enemy extends Character {
     private static final float BASE_ATTACK_TIME = 3.0f;
     private static final int DEFAULT_ENEMY_LIVES = 10;
 
+    private static float SCALE_TIME = 0.5f;
+
     private float timeSinceAttack;
     private float nextAttackTime;
 
@@ -38,6 +40,13 @@ public class Enemy extends Character {
     public void draw(SpriteBatch batch, SizeEvaluator sizeEvaluator) {
         preDraw();
         setPosition(sizeEvaluator.getEnemyX(this), sizeEvaluator.getEnemyY(this));
+        if (timeAlive < SCALE_TIME) {
+            float t = timeAlive/SCALE_TIME;
+            t = t * t;
+            setScale(t);
+        } else {
+            setScale(1);
+        }
         super.draw(batch); // sprite drawing method that takes care of the drawing for us
         postDraw();
     }

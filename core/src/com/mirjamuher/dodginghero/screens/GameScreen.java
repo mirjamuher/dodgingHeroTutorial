@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -23,6 +24,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
     // 8 tile height & 12 tile width
     public static final int SCREEN_W = 12 * Resources.TILE_SIZE;  // 192 pixels
     public static final int SCREEN_H = 8 * Resources.TILE_SIZE;  // 122 pixels
+
+    private static final float SHAKE_TIME_ON_IMG = 0.3f;
+    private static final float SHAKE_DIST = 4.0f;  // shakes 4 pixels
 
     // helping with rendering objects at right spot
     private SizeEvaluator sizeEvaluator;
@@ -55,8 +59,10 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
     @Override
     public void render(float delta) {
+        // update everything call
         update(delta);
 
+        // clear screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -73,6 +79,15 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
         player.draw(batch, sizeEvaluator);
         gameLogic.getEnemy().draw(batch, sizeEvaluator);  // logic will be swapping enemies, that's why we just get enemy here
         batch.end();
+
+        // center camera
+        gameStage.getCamera().position.set(gameStage.getWidth() / 2, gameStage.getHeight() / 2, 0);
+
+        // shake screen if gamer was hurt more recently than the shake time is set
+        if (player.getLives() > 0 && player.getTimeAlive() - player.getTimeDmgWasTaken() < SHAKE_TIME_ON_IMG) {
+            gameStage.getCamera().translate(-(SHAKE_DIST / 2) + MathUtils.random(SHAKE_DIST), -(SHAKE_DIST / 2) + MathUtils.random(SHAKE_DIST), 0);
+        }
+        gameStage.getCamera().update();
 
         // draw writing
         drawUI();

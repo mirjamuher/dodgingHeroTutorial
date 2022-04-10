@@ -45,4 +45,12 @@ public class Character extends Sprite {
     public void postDraw() {
         setColor(1, 1, 1, 1);
     }
+
+    public float getTimeDmgWasTaken() {
+        return timeDmgWasTaken;
+    }
+
+    public float getTimeAlive() {
+        return timeAlive;
+    }
 }

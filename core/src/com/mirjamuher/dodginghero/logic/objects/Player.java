@@ -9,6 +9,7 @@ public class Player extends Character {
     private int baseNumY;  // Y position of Player
 
     private final int max_lives;
+    public static final float APPROACH_TIME = 0.5f;
 
     public Player(int fx, int fy, Resources res, int lives) {
         super(lives);
@@ -44,7 +45,14 @@ public class Player extends Character {
 
     public void draw(SpriteBatch batch, SizeEvaluator sizeEvaluator) {
         preDraw();
-        setPosition(sizeEvaluator.getBaseX(baseNumX), sizeEvaluator.getBaseY(baseNumY));
+        // if it's the first 0.5sec of game, animate player approaching
+        if (timeAlive < APPROACH_TIME) {
+            float t = timeAlive / APPROACH_TIME;
+            t = t * t;
+            setPosition(t * sizeEvaluator.getBaseX(baseNumX), sizeEvaluator.getBaseY(baseNumY));
+        } else {
+            setPosition(sizeEvaluator.getBaseX(baseNumX), sizeEvaluator.getBaseY(baseNumY));
+        }
         super.draw(batch);
         postDraw();
     }
