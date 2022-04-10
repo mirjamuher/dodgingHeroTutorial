@@ -12,6 +12,8 @@ public class Resources {
     public TextureRegion wall;
     public TextureRegion base;
     public TextureRegion warning;
+    public Sprite attackBonus;
+    public Sprite healthBonus;
 
     public BitmapFont gameFont;
 
@@ -30,6 +32,9 @@ public class Resources {
         warning = gameSprites.findRegion("warning_new");
 
         gameFont = new BitmapFont(Gdx.files.internal("gamefont16.fnt"), Gdx.files.internal("gamefont16.png"), false);
+
+        attackBonus = new Sprite(gameSprites.findRegion(("attack")));
+        healthBonus = new Sprite(gameSprites.findRegion(("health")));
 
         player = new Sprite(gameSprites.findRegion("player"));
         enemy = new Sprite(gameSprites.findRegion("spider"));

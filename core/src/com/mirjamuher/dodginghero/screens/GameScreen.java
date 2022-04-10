@@ -14,6 +14,7 @@ import com.mirjamuher.dodginghero.Resources;
 import com.mirjamuher.dodginghero.graph.Background;
 import com.mirjamuher.dodginghero.graph.SizeEvaluator;
 import com.mirjamuher.dodginghero.logic.GameLogic;
+import com.mirjamuher.dodginghero.logic.objects.Bonus;
 import com.mirjamuher.dodginghero.logic.objects.Player;
 
 public class GameScreen extends DefaultScreen implements InputProcessor {
@@ -66,6 +67,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
         // draw sprites
         batch.begin();
+        for (Bonus bonus: gameLogic.getBonuses()) {
+            bonus.draw(batch, sizeEvaluator);
+        }
         player.draw(batch, sizeEvaluator);
         gameLogic.getEnemy().draw(batch, sizeEvaluator);  // logic will be swapping enemies, that's why we just get enemy here
         batch.end();
@@ -78,7 +82,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
     public void drawUI() {
         batch.begin();
-        drawShadowedText("LIVES:" + player.getLives(), 5, gameStage.getHeight() - 7, gameStage.getWidth(), Align.left, Color.WHITE);
+        drawShadowedText("LIVES:" + player.getLives(), 5, gameStage.getHeight() - 7, gameStage.getWidth(), Align.left, Color.WHITE);  // our lives
+        drawShadowedText("ENEMY:" + gameLogic.getEnemy().getLives(), 0, gameStage.getHeight() - 7, gameStage.getWidth() - 5, Align.right, Color.WHITE);  // enemy lives
         if (player.getLives() <= 0) {
             drawShadowedText("DEFEAT!", 0, gameStage.getViewport().getScreenY() + gameStage.getHeight() / 2, gameStage.getWidth(), Align.center, Color.RED);
         }

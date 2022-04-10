@@ -1,22 +1,31 @@
 package com.mirjamuher.dodginghero.logic;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.mirjamuher.dodginghero.DodgingHero;
 import com.mirjamuher.dodginghero.graph.effects.EffectEngine;
 import com.mirjamuher.dodginghero.graph.effects.WarningEffect;
+import com.mirjamuher.dodginghero.logic.objects.Bonus;
 import com.mirjamuher.dodginghero.logic.objects.Enemy;
 import com.mirjamuher.dodginghero.logic.objects.Player;
+
+import java.util.ArrayList;
 
 public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.WarningEffectListener {
     // sets maximum number of bases
     public static final int NUM_OF_BASES_X = 3;
     public static final int NUM_OF_BASES_Y = 3;
     private static final int DEFAULT_PLAYER_LIVES = 3;
+    private static final float BONUS_SPAWN_INTEVAL = 2;
+    private static final int MAX_BONUSES_ON_FIELD = 3;
+
+    float gameTime;
 
     DodgingHero game;
     Player player;
     Enemy enemy;
+    ArrayList<Bonus> bonuses;
+    float lastBonusSpawnTime;
+
     EffectEngine effectEngine;
 
     public GameLogic(DodgingHero game) {
@@ -25,6 +34,10 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
         player = new Player(MathUtils.random(NUM_OF_BASES_X), MathUtils.random(NUM_OF_BASES_Y), game.res, DEFAULT_PLAYER_LIVES);
         enemy = new Enemy(game.res, this);
         effectEngine = new EffectEngine();
+
+        bonuses = new ArrayList<Bonus>();
+        gameTime = 0;
+        lastBonusSpawnTime = 0;
     }
 
     // Player Logic
@@ -60,10 +73,48 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
 
     // Effect Logic
     public void update(float delta) {
+        // measures gametime since game started
+        gameTime += delta;
+
+        // updates sprites
         effectEngine.update(delta);
         enemy.update(delta);
+        
+        if (lastBonusSpawnTime + BONUS_SPAWN_INTEVAL < gameTime && bonuses.size() < MAX_BONUSES_ON_FIELD) {
+            SpawnRandomBonus();
+        }
     }
 
+    // handle Bonuses
+    private void SpawnRandomBonus() {
+        int fx = 0;
+        int fy = 0;
+        boolean targetNearPlayer;
+        boolean targetNotEmpty = false;
+
+        do {
+            fx = MathUtils.random(NUM_OF_BASES_X);
+            fy = MathUtils.random(NUM_OF_BASES_Y);
+            // make sure bonus doesn't spawn in same row or column or field as player
+            targetNearPlayer = player.getBaseNumX() == fx || player.getBaseNumY() == fy;
+            // make sure there isn't already a target on the field
+            for (Bonus bonus : bonuses) { // shorthand for (int i=0; i < bonuses.size(); i++)
+                if (bonus.getBaseNumX() == fx && bonus.getBaseNumY() == fy) {
+                    targetNotEmpty = true;
+                    break;
+                }
+            }
+        } while (targetNearPlayer || targetNotEmpty); // both false to stop
+
+        bonuses.add(Bonus.Create(fx, fy, MathUtils.random(3) == 0 ? Bonus.BONUS_TYPE_HEALTH : Bonus.BONUS_TYPE_ATTACK, game.res));
+        lastBonusSpawnTime = gameTime;
+    }
+
+    public ArrayList<Bonus> getBonuses() {
+        return bonuses;
+    }
+
+    // handle Effects
     public EffectEngine getEffectEngine() {
         return effectEngine;
     }
