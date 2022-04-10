@@ -52,6 +52,23 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
     public void AssignPlayerPosition(int fx, int fy) {
         player.setBaseNumX(fx);
         player.setBaseNumY(fy);
+
+        // check if there is a bonus to pick up
+        for (int i = bonuses.size() - 1; i >= 0; i--) {
+            Bonus currentBonus = bonuses.get(i);
+            if (currentBonus.getBaseNumX() == fx && currentBonus.getBaseNumY() == fy) {
+
+                if (currentBonus.getBonusType() == Bonus.BONUS_TYPE_ATTACK) {
+                    enemy.takeDamage(1);
+                } else if (currentBonus.getBonusType() == Bonus.BONUS_TYPE_HEALTH) {
+                    player.addLives(1);
+                }
+
+                currentBonus.release();
+                bonuses.remove(i);
+                break;
+            }
+        }
     }
 
     // Enemy Logic
@@ -89,22 +106,22 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
     private void SpawnRandomBonus() {
         int fx = 0;
         int fy = 0;
-        boolean targetNearPlayer;
-        boolean targetNotEmpty = false;
+        boolean targetNonEmpty = true;
 
         do {
             fx = MathUtils.random(NUM_OF_BASES_X);
             fy = MathUtils.random(NUM_OF_BASES_Y);
-            // make sure bonus doesn't spawn in same row or column or field as player
-            targetNearPlayer = player.getBaseNumX() == fx || player.getBaseNumY() == fy;
-            // make sure there isn't already a target on the field
-            for (Bonus bonus : bonuses) { // shorthand for (int i=0; i < bonuses.size(); i++)
-                if (bonus.getBaseNumX() == fx && bonus.getBaseNumY() == fy) {
-                    targetNotEmpty = true;
-                    break;
+            targetNonEmpty = player.getBaseNumX() == fx || fy == player.getBaseNumY();
+
+            for (int i = 0; i < bonuses.size() && (!targetNonEmpty); i++)
+            {
+                if (bonuses.get(i).getBaseNumX() == fx &&
+                        bonuses.get(i).getBaseNumY() == fy)
+                {
+                    targetNonEmpty = true;
                 }
             }
-        } while (targetNearPlayer || targetNotEmpty); // both false to stop
+        } while (targetNonEmpty);
 
         bonuses.add(Bonus.Create(fx, fy, MathUtils.random(3) == 0 ? Bonus.BONUS_TYPE_HEALTH : Bonus.BONUS_TYPE_ATTACK, game.res));
         lastBonusSpawnTime = gameTime;

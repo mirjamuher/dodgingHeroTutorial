@@ -10,12 +10,14 @@ public class Player extends Sprite {
     private int baseNumY;  // Y position of Player
 
     private int lives;
+    private final int max_lives;
 
     public Player(int fx, int fy, Resources res, int lives) {
         baseNumX = fx;
         baseNumY = fy;
         set(res.player); // makes this sprite a copy in every way of specified sprite
         this.lives = lives;
+        max_lives = lives;
     }
 
     public int getBaseNumX() {
@@ -42,6 +44,13 @@ public class Player extends Sprite {
         lives -= val;
         if (lives <= 0) {
             lives = 0;
+        }
+    }
+
+    public void addLives(int amount) {
+        lives += amount;
+        if (lives > max_lives) {
+            lives = max_lives;
         }
     }
 

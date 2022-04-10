@@ -85,9 +85,16 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
         drawShadowedText("LIVES:" + player.getLives(), 5, gameStage.getHeight() - 7, gameStage.getWidth(), Align.left, Color.WHITE);  // our lives
         drawShadowedText("ENEMY:" + gameLogic.getEnemy().getLives(), 0, gameStage.getHeight() - 7, gameStage.getWidth() - 5, Align.right, Color.WHITE);  // enemy lives
         if (player.getLives() <= 0) {
-            drawShadowedText("DEFEAT!", 0, gameStage.getViewport().getScreenY() + gameStage.getHeight() / 2, gameStage.getWidth(), Align.center, Color.RED);
+            ShowGameResult("DEFEAT!");
+        }
+        else if (gameLogic.getEnemy().getLives() <= 0) {
+            ShowGameResult("VICTORY!");
         }
         batch.end();
+    }
+
+    private void ShowGameResult(String str) {
+        drawShadowedText(str, 0, gameStage.getViewport().getScreenY() + gameStage.getHeight() / 2, gameStage.getWidth(), Align.center, Color.RED);
     }
 
     private void drawShadowedText(String str, float xPos, float yPos, float width, int align, Color color) {
@@ -107,8 +114,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
     public void update(float delta) {
         gameStage.act(delta);  // updates each actor in gameStage based on time since last call (delta)
 
-        // if gameover, stop updating game logic
-        if (player.getLives() > 0) {
+        // if gameover or win, stop updating game logic
+        if (player.getLives() > 0 && gameLogic.getEnemy().getLives() > 0) {
             gameLogic.update(delta);  // updates gamelogic (effects so far)
         }
     }
@@ -132,8 +139,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
     public void attemptMove(int dx, int dy) {
         // if player can legally move, assign new position and move sprite
-        // if player is out of lives, lock movement
-        if (player.getLives() > 0 && gameLogic.CanMove(player.getBaseNumX() + dx, player.getBaseNumY() + dy)) {
+        // if player is out of lives of enemy is defeated, lock movement
+        if (player.getLives() > 0 && gameLogic.getEnemy().getLives() > 0 && gameLogic.CanMove(player.getBaseNumX() + dx, player.getBaseNumY() + dy)) {
             gameLogic.AssignPlayerPosition(player.getBaseNumX() + dx, player.getBaseNumY() + dy);
         }
     }

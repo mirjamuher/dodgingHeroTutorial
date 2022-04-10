@@ -72,4 +72,10 @@ public class Enemy extends Sprite {
         return lives;
     }
 
+    public void takeDamage(int amount) {
+        lives -= amount;
+        if (lives < 0) {
+            lives = 0;
+        }
+    }
 }
