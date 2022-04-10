@@ -46,7 +46,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
         gameStage = new Stage(viewport, batch);  // InputProcessor that fires events to appropriate actors through act() method
 
         // initialise helper functions
-        sizeEvaluator = new SizeEvaluator(gameStage, game.res, GameLogic.NUM_OF_BASES_X, GameLogic.NUM_OF_BASES_Y);
+        sizeEvaluator = new SizeEvaluator(gameStage, game.res, GameLogic.NUM_OF_BASES_X, GameLogic.NUM_OF_BASES_Y, gameStage.getWidth());
         gameLogic = new GameLogic(game);
         player = gameLogic.getPlayer();
 
@@ -128,11 +128,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
     public void update(float delta) {
         gameStage.act(delta);  // updates each actor in gameStage based on time since last call (delta)
-
-        // if gameover or win, stop updating game logic
-        if (player.getLives() > 0 && gameLogic.getEnemy().getLives() > 0) {
-            gameLogic.update(delta);  // updates gamelogic (effects so far)
-        }
+        gameLogic.update(delta);  // updates gamelogic (effects so far)
     }
 
     public void drawBases() {
@@ -150,6 +146,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
     public void resize(int width, int height) {
         super.resize(width, height);
         gameStage.getViewport().update(width, height, true);  // tells gameStage that window was resized and to center the Camera
+        sizeEvaluator.setRightSideX(gameStage.getWidth());
     }
 
     public void attemptMove(int dx, int dy) {

@@ -14,14 +14,17 @@ public class SizeEvaluator {
 
     // how much extra distance between the bases
     private static final int BASE_MARGIN = 3;
+    private float rightSideX
+            ;
 
 
-    public SizeEvaluator(Stage stage, Resources resources, int maxBaseX, int maxBaseY) {
+    public SizeEvaluator(Stage stage, Resources resources, int maxBaseX, int maxBaseY, float rightSideX) {
        // returns coordinates of every base that is being drawn
        measuredStage = stage;
        res = resources;
        MAX_NUM_BASES_X = maxBaseX;
        MAX_NUM_BASES_Y = maxBaseY;
+       this.rightSideX = rightSideX;
    }
 
    // Player functinality
@@ -52,5 +55,14 @@ public class SizeEvaluator {
 
     public float getEnemyY(Sprite enemy) {
        return (measuredStage.getHeight() / 2 - enemy.getHeight() / 2);
+    }
+
+    public void setRightSideX(float value) {
+       // updates the right side to be of the right value when screen is resized
+       rightSideX = value;
+    }
+
+    public float getRightSideX() {
+        return rightSideX;
     }
 }

@@ -5,11 +5,15 @@ import com.mirjamuher.dodginghero.Resources;
 import com.mirjamuher.dodginghero.graph.SizeEvaluator;
 
 public class Player extends Character {
+    public static final float APPROACH_TIME = 0.5f;
+
     private int baseNumX;  // X position of Player
     private int baseNumY;  // Y position of Player
 
+    private boolean winning = false;
+    private float winTime = 0;
+
     private final int max_lives;
-    public static final float APPROACH_TIME = 0.5f;
 
     public Player(int fx, int fy, Resources res, int lives) {
         super(lives);
@@ -43,6 +47,12 @@ public class Player extends Character {
         }
     }
 
+    public void markVictorious() {
+        // shows that player has won
+        winning = true;
+        winTime = timeAlive;
+    }
+
     public void draw(SpriteBatch batch, SizeEvaluator sizeEvaluator) {
         preDraw();
         // if it's the first 0.5sec of game, animate player approaching
@@ -50,7 +60,15 @@ public class Player extends Character {
             float t = timeAlive / APPROACH_TIME;
             t = t * t;
             setPosition(t * sizeEvaluator.getBaseX(baseNumX), sizeEvaluator.getBaseY(baseNumY));
-        } else {
+        } else if (winning){  // if player has won, animate him leaving to the right
+            float t = 1;
+            if (timeAlive - winTime < APPROACH_TIME) {  // make sure that we don't retrigger this once 0.5 seconds have passed
+                t = (timeAlive - winTime) / APPROACH_TIME;
+                t = t * t;
+            }
+            float fx = sizeEvaluator.getBaseX(baseNumX);
+            setPosition(fx + t * (sizeEvaluator.getRightSideX() - fx), sizeEvaluator.getBaseY(baseNumY));
+        } else {  // else just put him on right base
             setPosition(sizeEvaluator.getBaseX(baseNumX), sizeEvaluator.getBaseY(baseNumY));
         }
         super.draw(batch);

@@ -60,6 +60,9 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
 
                 if (currentBonus.getBonusType() == Bonus.BONUS_TYPE_ATTACK) {
                     enemy.takeDamage(1);
+                    if (enemy.getLives() <= 0) {
+                        player.markVictorious();
+                    }
                 } else if (currentBonus.getBonusType() == Bonus.BONUS_TYPE_HEALTH) {
                     player.addLives(1);
                 }
@@ -94,12 +97,15 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
         gameTime += delta;
 
         // updates sprites
-        effectEngine.update(delta);
         player.update(delta);
-        enemy.update(delta);
-        
-        if (lastBonusSpawnTime + BONUS_SPAWN_INTEVAL < gameTime && bonuses.size() < MAX_BONUSES_ON_FIELD) {
-            SpawnRandomBonus();
+
+        // if no gameover/gamewon condition was hit, update
+        if (player.getLives() > 0 && enemy.getLives() > 0) {
+            effectEngine.update(delta);
+            enemy.update(delta);
+            if (lastBonusSpawnTime + BONUS_SPAWN_INTEVAL < gameTime && bonuses.size() < MAX_BONUSES_ON_FIELD) {
+                SpawnRandomBonus();
+            }
         }
     }
 
