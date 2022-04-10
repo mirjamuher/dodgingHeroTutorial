@@ -8,7 +8,7 @@ import com.mirjamuher.dodginghero.logic.GameLogic;
 
 public class Enemy extends Character {
     private static final float BASE_ATTACK_TIME = 3.0f;
-    private static final int DEFAULT_ENEMY_LIVES = 10;
+    private static final int DEFAULT_ENEMY_LIVES = 5;
 
     private static float SCALE_TIME = 0.5f;
 

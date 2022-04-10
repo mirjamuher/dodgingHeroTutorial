@@ -18,6 +18,11 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
     private static final float BONUS_SPAWN_INTEVAL = 2;
     private static final int MAX_BONUSES_ON_FIELD = 3;
 
+    public interface GameEventListener {
+        // when game ends, onGameEnd will notify others of that fact
+        void onGameEnd(boolean playerWon);
+    }
+
     float gameTime;
 
     DodgingHero game;
@@ -27,13 +32,15 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
     float lastBonusSpawnTime;
 
     EffectEngine effectEngine;
+    GameEventListener gameEventListener;
 
-    public GameLogic(DodgingHero game) {
+    public GameLogic(DodgingHero game, GameEventListener listener) {
         this.game = game;
         // generates player at a random location of the tiles
         player = new Player(MathUtils.random(NUM_OF_BASES_X), MathUtils.random(NUM_OF_BASES_Y), game.res, DEFAULT_PLAYER_LIVES);
         enemy = new Enemy(game.res, this);
         effectEngine = new EffectEngine();
+        gameEventListener = listener;
 
         bonuses = new ArrayList<Bonus>();
         gameTime = 0;
@@ -62,6 +69,7 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
                     enemy.takeDamage(1);
                     if (enemy.getLives() <= 0) {
                         player.markVictorious();
+                        gameEventListener.onGameEnd(true);
                     }
                 } else if (currentBonus.getBonusType() == Bonus.BONUS_TYPE_HEALTH) {
                     player.addLives(1);

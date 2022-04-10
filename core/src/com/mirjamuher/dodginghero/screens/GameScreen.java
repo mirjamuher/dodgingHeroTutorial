@@ -7,7 +7,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.mirjamuher.dodginghero.DodgingHero;
@@ -18,7 +20,7 @@ import com.mirjamuher.dodginghero.logic.GameLogic;
 import com.mirjamuher.dodginghero.logic.objects.Bonus;
 import com.mirjamuher.dodginghero.logic.objects.Player;
 
-public class GameScreen extends DefaultScreen implements InputProcessor {
+public class GameScreen extends DefaultScreen implements InputProcessor, GameLogic.GameEventListener {
     SpriteBatch batch;
 
     // 8 tile height & 12 tile width
@@ -37,6 +39,10 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
     private Background bg;
     private Player player;
 
+    // fade timers
+    public static final float GAME_FADEIN = 0.5f;
+    public static final float GAME_FADEOUT = 0.5f;
+
     public GameScreen(DodgingHero game) {
         super(game);
         batch = new SpriteBatch();  // responsible for sending command to the video card (e.g. rendering things)
@@ -47,7 +53,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
         // initialise helper functions
         sizeEvaluator = new SizeEvaluator(gameStage, game.res, GameLogic.NUM_OF_BASES_X, GameLogic.NUM_OF_BASES_Y, gameStage.getWidth());
-        gameLogic = new GameLogic(game);
+        gameLogic = new GameLogic(game, this);
         player = gameLogic.getPlayer();
 
         // create sprite objects
@@ -55,6 +61,25 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
         // tell gdx that GameScreen handels user input
         Gdx.input.setInputProcessor(this);
+
+        // add fade-in when screen starts
+        gameStage.addAction(
+                new Action() {
+                    float time = 0;
+                    @Override
+                    public boolean act(float delta) {
+                        time += delta;
+                        float t = time / GAME_FADEIN;
+                        t *= t;  // quadratic easing
+
+                        if (t > 1.0f){
+                            t = 1.0f;  // to ensure transparency doesn't get messed up
+                        }
+                        batch.setColor(1, 1, 1, t);
+                        return time >= GAME_FADEIN;
+                    }
+                }
+        );
     }
 
     @Override
@@ -155,6 +180,35 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
         if (player.getLives() > 0 && gameLogic.getEnemy().getLives() > 0 && gameLogic.CanMove(player.getBaseNumX() + dx, player.getBaseNumY() + dy)) {
             gameLogic.AssignPlayerPosition(player.getBaseNumX() + dx, player.getBaseNumY() + dy);
         }
+    }
+
+    @Override
+    public void onGameEnd(boolean playerWon) {
+        gameStage.addAction(
+                Actions.sequence(  // allows multiple actions
+                        // add actions to actors. in this project we have Sprites, not actors, so this is a bit more cumbersome than it needs to be
+                        new Action() {
+                            float time = 0;
+
+                            @Override
+                            public boolean act(float delta) {
+                                time += delta;
+                                float t = time / GAME_FADEOUT;
+                                t += t;
+                                batch.setColor(1, 1, 1, 1 - t);  // this ensures that transparency moves towards 0
+                                return time >= GAME_FADEOUT;
+                            }
+                        },
+                        new Action() {
+                            @Override
+                            public boolean act(float delta) {
+                                dispose(); // disposes current screen
+                                game.setScreen(new GameScreen(game));
+                                return true;
+                            }
+                        }
+                )
+        );
     }
 
     @Override
