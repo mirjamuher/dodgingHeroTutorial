@@ -76,7 +76,7 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
                 } else if (currentBonus.getBonusType() == Bonus.BONUS_TYPE_HEALTH) {
                     player.addLives(1);
                 } else if (currentBonus.getBonusType() == Bonus.BONUS_TYPE_COIN) {
-                    GameProgress.currentGold += 1;
+                    GameProgress.currentGold += 1000;
                 }
 
                 currentBonus.release();
