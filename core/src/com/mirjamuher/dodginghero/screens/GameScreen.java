@@ -118,7 +118,7 @@ public class GameScreen extends DefaultScreen implements GameLogic.GameEventList
                         t *= t;  // quadratic easing
 
                         if (t > 1.0f){
-                            t = 1.0f;  // to ensure transparency doesn't get messed up
+                            t = 1.0f;  // to ensure transparency doesn't get messed up!
                         }
                         batch.setColor(1, 1, 1, t);
                         return time >= GAME_FADEIN;
