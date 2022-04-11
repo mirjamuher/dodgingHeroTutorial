@@ -1,5 +1,6 @@
 package com.mirjamuher.dodginghero.logic;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.math.MathUtils;
 import com.mirjamuher.dodginghero.DodgingHero;
 import com.mirjamuher.dodginghero.graph.effects.EffectEngine;
@@ -14,7 +15,7 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
     // sets maximum number of bases
     public static final int NUM_OF_BASES_X = 3;
     public static final int NUM_OF_BASES_Y = 3;
-    private static final float BONUS_SPAWN_INTEVAL = 1;
+    private float BONUS_SPAWN_INTEVAL = 1;
     private static final int MAX_BONUSES_ON_FIELD = 3;
 
     public interface GameEventListener {
@@ -42,6 +43,7 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
         gameEventListener = listener;
 
         bonuses = new ArrayList<Bonus>();
+        BONUS_SPAWN_INTEVAL = 2f * (GameProgress.getPlayerBonusReduction());
         gameTime = 0;
         lastBonusSpawnTime = 0;
     }
@@ -63,9 +65,8 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
         for (int i = bonuses.size() - 1; i >= 0; i--) {
             Bonus currentBonus = bonuses.get(i);
             if (currentBonus.getBaseNumX() == fx && currentBonus.getBaseNumY() == fy) {
-
                 if (currentBonus.getBonusType() == Bonus.BONUS_TYPE_ATTACK) {
-                    enemy.takeDamage(GameProgress.playerDamage);
+                    enemy.takeDamage(GameProgress.getPlayerDamage());
                     // if win game condition fulfilled
                     if (enemy.getLives() <= 0) {
                         GameProgress.currentLevel += 1;
@@ -74,7 +75,7 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
                         gameEventListener.onGameEnd(true);
                     }
                 } else if (currentBonus.getBonusType() == Bonus.BONUS_TYPE_HEALTH) {
-                    player.addLives(1);
+                    player.addLives(GameProgress.getPlayerHealthRestored());
                 } else if (currentBonus.getBonusType() == Bonus.BONUS_TYPE_COIN) {
                     GameProgress.currentGold += 1000;
                 }

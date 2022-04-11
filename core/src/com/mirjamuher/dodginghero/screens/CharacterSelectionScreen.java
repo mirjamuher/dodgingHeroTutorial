@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mirjamuher.dodginghero.DodgingHero;
 import com.mirjamuher.dodginghero.logic.GameProgress;
@@ -86,11 +87,19 @@ public class CharacterSelectionScreen extends DefaultScreen {
             uiStage.addActor(upgradeButton);
         }
 
-        // add character & level
+        // add character
         Image heroSprite = new Image(game.res.playerSprites.get(CharacterRecord.CHARACTERS[GameProgress.currentCharacter].name));
-        heroSprite.setPosition((uiStage.getWidth() - heroSprite.getWidth()) / 2, (uiStage.getHeight() - heroSprite.getHeight()) / 2);
+        heroSprite.setPosition((uiStage.getWidth() - heroSprite.getWidth()) / 4, (uiStage.getHeight() - heroSprite.getHeight()) / 2);
         uiStage.addActor(heroSprite);
 
+        // add stats label
+        Label stat = prepareStatLabel("DMG: " + GameProgress.getPlayerDamage(), uiStage.getWidth() / 2, heroSprite.getY() + heroSprite.getHeight(), textStyle);
+        stat = prepareStatLabel("HP: " + GameProgress.getPlayerMaxHP(), uiStage.getWidth() / 2, stat.getY() - 10, textStyle);
+        stat = prepareStatLabel("HEAL: " + GameProgress.getPlayerHealthRestored(), uiStage.getWidth() / 2, stat.getY() - 10, textStyle);
+        prepareStatLabel("BND: " + GameProgress.getPlayerBonusReductionValue(), uiStage.getWidth() / 2, stat.getY() - 10, textStyle);
+
+
+        // add levels
         int lvl = GameProgress.levels[GameProgress.currentCharacter];
         Label statusText = new Label(lvl > 0 ? "LVL" + lvl : "LOCKED", textStyle);
         statusText.setPosition(heroSprite.getX() + (heroSprite.getWidth() - statusText.getWidth()) / 2, heroSprite.getY() - statusText.getHeight() - 8);
@@ -98,7 +107,7 @@ public class CharacterSelectionScreen extends DefaultScreen {
 
         // add scrolling buttons
         TextButton nextButton = new TextButton(">>>", buttonStyle);
-        nextButton.setPosition(uiStage.getWidth() * 5 / 6 - nextButton.getWidth() / 2, uiStage.getHeight()/2);
+        nextButton.setPosition(uiStage.getWidth() * 5 / 6 - nextButton.getWidth() / 2, uiStage.getHeight() * 5 / 6);
         nextButton.addListener(new ClickListener(){
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
@@ -112,7 +121,7 @@ public class CharacterSelectionScreen extends DefaultScreen {
         uiStage.addActor(nextButton);
 
         TextButton prevButton = new TextButton("<<<", buttonStyle);
-        prevButton.setPosition(uiStage.getWidth() / 6 - nextButton.getWidth() / 2, uiStage.getHeight()/2);
+        prevButton.setPosition(uiStage.getWidth() / 6 - nextButton.getWidth() / 2, uiStage.getHeight() * 5 / 6);
         prevButton.addListener(new ClickListener(){
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
@@ -143,6 +152,16 @@ public class CharacterSelectionScreen extends DefaultScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         uiStage.act(delta);
         uiStage.draw();
+    }
+
+
+    // helper function for stats label
+    private Label prepareStatLabel(String text, float x, float  y, Label.LabelStyle textStyle) {
+        Label lbl = new Label(text, textStyle);
+        lbl.setAlignment(Align.left);
+        lbl.setPosition(x, y);
+        uiStage.addActor(lbl);
+        return lbl;
     }
 
     @Override

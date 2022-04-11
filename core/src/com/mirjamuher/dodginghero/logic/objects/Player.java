@@ -21,7 +21,7 @@ public class Player extends Character {
         baseNumX = fx;
         baseNumY = fy;
         set(res.playerSprites.get(CharacterRecord.CHARACTERS[GameProgress.currentCharacter].name)); // makes this sprite a copy in every way of specified sprite
-        max_lives = GameProgress.maxPlayerLives;
+        max_lives = GameProgress.getPlayerMaxHP();
     }
 
     public int getBaseNumX() {

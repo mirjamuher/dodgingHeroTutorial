@@ -6,8 +6,6 @@ import com.mirjamuher.dodginghero.logic.objects.CharacterRecord;
 
 public class GameProgress {
     public static int playerLives = 2;
-    public static int maxPlayerLives = 3;
-    public static int playerDamage = 1;
     public static int currentLevel = 0;
     public static int currentCharacter = 0;
     public static int currentGold = 0;
@@ -21,9 +19,7 @@ public class GameProgress {
     // below defines keys, right side is understood as filename, will be saved correctly automatically
     private static final String PROGRESS_SAVE_NAME = "progress";
     private static final String SAVE_KEY_LIVES = "lives";
-    private static final String SAVE_KEY_LIVES_MAX = "livemax";
     private static final String SAVE_KEY_CURRENT_LEVEL = "currentlevel";
-    private static final String SAVE_KEY_PLAYER_DAMAGE = "playerdamage";
     private static final String SAVE_KEY_PLAYER_GOLD = "playergold";
     private static final String SAVE_KEY_PLAYER_LEVEL = "playerlevel";
 
@@ -34,9 +30,7 @@ public class GameProgress {
     public static void Save() {
         Preferences prefs = Gdx.app.getPreferences(PROGRESS_SAVE_NAME);
         prefs.putInteger(SAVE_KEY_LIVES, playerLives);
-        prefs.putInteger(SAVE_KEY_LIVES_MAX, maxPlayerLives);
         prefs.putInteger(SAVE_KEY_CURRENT_LEVEL, currentLevel);
-        prefs.putInteger(SAVE_KEY_PLAYER_DAMAGE, playerDamage);
         prefs.putInteger(SAVE_KEY_PLAYER_GOLD, currentGold);
 
         // save level of each character
@@ -54,9 +48,7 @@ public class GameProgress {
         Preferences prefs = Gdx.app.getPreferences(PROGRESS_SAVE_NAME);
         // load keys & set default value
         playerLives = prefs.getInteger(SAVE_KEY_LIVES, 3);
-        maxPlayerLives = prefs.getInteger(SAVE_KEY_LIVES_MAX, 3);
         currentLevel = prefs.getInteger(SAVE_KEY_CURRENT_LEVEL, 0);
-        playerDamage = prefs.getInteger(SAVE_KEY_PLAYER_DAMAGE, 1);
         currentGold = prefs.getInteger(SAVE_KEY_PLAYER_GOLD, 0);
 
         // get level of each character; default to level 0
@@ -69,10 +61,33 @@ public class GameProgress {
         return levels[currentCharacter] * 2;
     }
 
+    public static int getPlayerMaxHP() {
+        CharacterRecord crntCharRecord = CharacterRecord.CHARACTERS[currentCharacter];
+        return crntCharRecord.getMaxHP(levels[currentCharacter]);
+    }
+
+    public static int getPlayerDamage() {
+        CharacterRecord crntCharRecord = CharacterRecord.CHARACTERS[currentCharacter];
+        return crntCharRecord.getDmg(levels[currentCharacter]);
+    }
+
+    public static int getPlayerHealthRestored() {
+        CharacterRecord crntCharRecord = CharacterRecord.CHARACTERS[currentCharacter];
+        return crntCharRecord.getHpRestored(levels[currentCharacter]);
+    }
+
+    public static float getPlayerBonusReduction() {
+        CharacterRecord crntCharRecord = CharacterRecord.CHARACTERS[currentCharacter];
+        return crntCharRecord.getBonusSpawnReduction(levels[currentCharacter]);
+    }
+
+    public static int getPlayerBonusReductionValue() {
+        CharacterRecord crntCharRecord = CharacterRecord.CHARACTERS[currentCharacter];
+        return levels[currentCharacter / crntCharRecord.levelsForBonusSpawnUpgrade];
+    }
+
     public static void Reset() {
         playerLives = 3;
-        maxPlayerLives = 3;
         currentLevel = 0;
-        playerDamage = 1;
     }
 }
