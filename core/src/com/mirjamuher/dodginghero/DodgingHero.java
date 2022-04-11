@@ -1,10 +1,8 @@
 package com.mirjamuher.dodginghero;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.mirjamuher.dodginghero.logic.GameProgress;
 import com.mirjamuher.dodginghero.screens.CharacterSelectionScreen;
-import com.mirjamuher.dodginghero.screens.GameScreen;
 
 public class DodgingHero extends Game {
 	public Resources res;
@@ -13,6 +11,7 @@ public class DodgingHero extends Game {
 	public void create () {
 		res = new Resources();
 		GameProgress.Load();
+		SoundManager.loadSounds();
 		setScreen(new CharacterSelectionScreen(this));
 	}
 	
@@ -20,5 +19,6 @@ public class DodgingHero extends Game {
 	public void dispose () {
 		GameProgress.Save();
 		res.dispose();
+		SoundManager.releaseSounds();
 	}
 }

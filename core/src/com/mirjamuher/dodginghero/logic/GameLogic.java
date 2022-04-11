@@ -21,6 +21,7 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
     public interface GameEventListener {
         // when game ends, onGameEnd will notify others of that fact
         void onGameEnd(final boolean playerWon);
+        void onBonusPickup(byte bonusType);
     }
 
     float gameTime;
@@ -65,6 +66,7 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
         for (int i = bonuses.size() - 1; i >= 0; i--) {
             Bonus currentBonus = bonuses.get(i);
             if (currentBonus.getBaseNumX() == fx && currentBonus.getBaseNumY() == fy) {
+                gameEventListener.onBonusPickup(currentBonus.getBonusType());  // plays sound
                 if (currentBonus.getBonusType() == Bonus.BONUS_TYPE_ATTACK) {
                     enemy.takeDamage(GameProgress.getPlayerDamage());
                     // if win game condition fulfilled

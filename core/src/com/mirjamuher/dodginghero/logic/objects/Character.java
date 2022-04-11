@@ -1,6 +1,7 @@
 package com.mirjamuher.dodginghero.logic.objects;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.mirjamuher.dodginghero.SoundManager;
 import com.mirjamuher.dodginghero.logic.GameProgress;
 
 public class Character extends Sprite {
@@ -21,6 +22,7 @@ public class Character extends Sprite {
     }
 
     public void takeDamage(int val) {
+        SoundManager.playSwingSound();
         timeDmgWasTaken = timeAlive;  // sets the time when dmg was taken to noe
         lives -= val;
         if (lives <= 0) {

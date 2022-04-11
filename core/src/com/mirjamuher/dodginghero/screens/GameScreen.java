@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.mirjamuher.dodginghero.DodgingHero;
 import com.mirjamuher.dodginghero.Resources;
+import com.mirjamuher.dodginghero.SoundManager;
 import com.mirjamuher.dodginghero.graph.Background;
 import com.mirjamuher.dodginghero.graph.SizeEvaluator;
 import com.mirjamuher.dodginghero.logic.GameLogic;
@@ -189,6 +190,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor, GameLog
         // if player can legally move, assign new position and move sprite
         // if player is out of lives of enemy is defeated, lock movement
         if (player.getLives() > 0 && gameLogic.getEnemy().getLives() > 0 && gameLogic.CanMove(player.getBaseNumX() + dx, player.getBaseNumY() + dy)) {
+            SoundManager.playWalkSound();
             gameLogic.AssignPlayerPosition(player.getBaseNumX() + dx, player.getBaseNumY() + dy);
         }
     }
@@ -224,6 +226,15 @@ public class GameScreen extends DefaultScreen implements InputProcessor, GameLog
                         }
                 )
         );
+    }
+
+    @Override
+    public void onBonusPickup(byte bonusType) {
+        if (bonusType == Bonus.BONUS_TYPE_COIN) {
+            SoundManager.playCoinSound();
+        } else if (bonusType == Bonus.BONUS_TYPE_HEALTH) {
+            SoundManager.playHealSound();
+        }
     }
 
     @Override
