@@ -10,15 +10,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mirjamuher.dodginghero.DodgingHero;
+import com.mirjamuher.dodginghero.logic.GameProgress;
+import com.mirjamuher.dodginghero.logic.objects.CharacterRecord;
 
 public class CharacterSelectionScreen extends DefaultScreen {
 
     Stage uiStage;  // responsible for UI controls (labels, buttons & display)
-    int currentCharacter;
 
     public CharacterSelectionScreen(DodgingHero game) {
         super(game);
-        currentCharacter = 0;
 
         // create scalable viewport and create a stage with it. Stage will use its own batch
         FitViewport viewport = new FitViewport(160, 120);
@@ -38,7 +38,6 @@ public class CharacterSelectionScreen extends DefaultScreen {
         // create button
         TextButton startButton = new TextButton("START", buttonStyle);
         startButton.setPosition((uiStage.getWidth() - startButton.getWidth()) / 2, uiStage.getHeight() / 6);
-
         // enable clicking leading to next screen
         startButton.addListener(new ClickListener() {
             @Override
@@ -47,20 +46,41 @@ public class CharacterSelectionScreen extends DefaultScreen {
                 game.setScreen(new GameScreen(game));
             }
         });
-
         uiStage.addActor(startButton);
 
         // add character scrolling
-        Image heroSprite = new Image(game.res.player);
+        Image heroSprite = new Image(game.res.playerSprites.get(CharacterRecord.CHARACTERS[GameProgress.currentCharacter].name));
         heroSprite.setPosition((uiStage.getWidth() - heroSprite.getWidth()) / 2, (uiStage.getHeight() - heroSprite.getHeight()) / 2);
         uiStage.addActor(heroSprite);
 
         TextButton nextButton = new TextButton(">>>", buttonStyle);
         nextButton.setPosition(uiStage.getWidth() * 5 / 6 - nextButton.getWidth() / 2, uiStage.getHeight()/2);
+        nextButton.addListener(new ClickListener(){
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                GameProgress.currentCharacter += 1;
+                if (GameProgress.currentCharacter == CharacterRecord.CHARACTERS.length) {
+                    GameProgress.currentCharacter = 0;
+                }
+                uiStage.clear();
+                prepareUI();
+            }
+        });
         uiStage.addActor(nextButton);
 
         TextButton prevButton = new TextButton("<<<", buttonStyle);
-        prevButton.setPosition(uiStage.getWidth() / 6, uiStage.getHeight() / 2);
+        prevButton.setPosition(uiStage.getWidth() / 6 - nextButton.getWidth() / 2, uiStage.getHeight()/2);
+        prevButton.addListener(new ClickListener(){
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                GameProgress.currentCharacter -= 1;
+                if (GameProgress.currentCharacter == -1) {
+                    GameProgress.currentCharacter = CharacterRecord.CHARACTERS.length - 1;
+                }
+                uiStage.clear();
+                prepareUI();
+            }
+        });
         uiStage.addActor(prevButton);
     }
 

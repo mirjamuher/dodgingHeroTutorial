@@ -8,6 +8,7 @@ public class GameProgress {
     public static int maxPlayerLives = 3;
     public static int playerDamage = 1;
     public static int currentLevel = 0;
+    public static int currentCharacter = 0;
 
     // Gdx Persistance files are basic key-value storage files which work for small games. For bigger games, you need binary files
     // below defines keys, right side is understood as filename, will be saved correctly automatically
