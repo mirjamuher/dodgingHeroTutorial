@@ -9,6 +9,7 @@ import com.mirjamuher.dodginghero.graph.SizeEvaluator;
 public class Bonus extends Sprite implements Pool.Poolable {
     public static byte BONUS_TYPE_ATTACK = 0;
     public static byte BONUS_TYPE_HEALTH = 1;
+    public static byte BONUS_TYPE_COIN = 2;
 
     private int baseNumX; // x-value of base it appears on
     private int baseNumY;
@@ -29,6 +30,8 @@ public class Bonus extends Sprite implements Pool.Poolable {
             set(res.attackBonus);
         } else if (bType == BONUS_TYPE_HEALTH) {
             set(res.healthBonus);
+        } else if (bType == BONUS_TYPE_COIN) {
+            set(res.coinBonus);
         }
     }
 
@@ -48,7 +51,7 @@ public class Bonus extends Sprite implements Pool.Poolable {
         bonusPool.free(this);
     }
 
-    public static Bonus Create(int fx, int fy, byte bType, Resources res) {
+    public static Bonus create(int fx, int fy, byte bType, Resources res) {
        Bonus bonus = bonusPool.obtain();
        bonus.setup(fx, fy, bType, res);
        return bonus;

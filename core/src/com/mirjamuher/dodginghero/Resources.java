@@ -17,6 +17,7 @@ public class Resources {
     public TextureRegion warning;
     public Sprite attackBonus;
     public Sprite healthBonus;
+    public Sprite coinBonus;
 
     public BitmapFont gameFont;
 
@@ -47,6 +48,7 @@ public class Resources {
 
         attackBonus = new Sprite(gameSprites.findRegion(("attack")));
         healthBonus = new Sprite(gameSprites.findRegion(("health")));
+        coinBonus = new Sprite(gameSprites.findRegion(("coin")));
 
         // player characters initialisation
         player = new Sprite(gameSprites.findRegion("player"));

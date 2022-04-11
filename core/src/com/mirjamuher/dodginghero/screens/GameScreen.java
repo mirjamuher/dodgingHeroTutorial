@@ -17,6 +17,7 @@ import com.mirjamuher.dodginghero.Resources;
 import com.mirjamuher.dodginghero.graph.Background;
 import com.mirjamuher.dodginghero.graph.SizeEvaluator;
 import com.mirjamuher.dodginghero.logic.GameLogic;
+import com.mirjamuher.dodginghero.logic.GameProgress;
 import com.mirjamuher.dodginghero.logic.objects.Bonus;
 import com.mirjamuher.dodginghero.logic.objects.Player;
 
@@ -124,8 +125,15 @@ public class GameScreen extends DefaultScreen implements InputProcessor, GameLog
 
     public void drawUI() {
         batch.begin();
+        // lives
         drawShadowedText("LIVES:" + player.getLives(), 5, gameStage.getHeight() - 7, gameStage.getWidth(), Align.left, Color.WHITE);  // our lives
         drawShadowedText("ENEMY:" + gameLogic.getEnemy().getLives(), 0, gameStage.getHeight() - 7, gameStage.getWidth() - 5, Align.right, Color.WHITE);  // enemy lives
+
+        // coins
+        batch.draw(game.res.coinBonus, gameStage.getViewport().getScreenX() + 2, gameStage.getViewport().getScreenY() + 5);
+        drawShadowedText("" + GameProgress.currentGold, gameStage.getViewport().getScreenX() + game.res.coinBonus.getWidth() + 4, gameStage.getViewport().getScreenY() + 8 + game.res.coinBonus.getHeight() / 2, gameStage.getWidth() - 4, Align.left, Color.WHITE);
+
+        // defeat/victory
         if (player.getLives() <= 0) {
             ShowGameResult("DEFEAT!");
         }

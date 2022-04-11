@@ -1,9 +1,7 @@
 package com.mirjamuher.dodginghero.logic;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.math.MathUtils;
 import com.mirjamuher.dodginghero.DodgingHero;
-import com.mirjamuher.dodginghero.Resources;
 import com.mirjamuher.dodginghero.graph.effects.EffectEngine;
 import com.mirjamuher.dodginghero.graph.effects.WarningEffect;
 import com.mirjamuher.dodginghero.logic.objects.Bonus;
@@ -16,7 +14,7 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
     // sets maximum number of bases
     public static final int NUM_OF_BASES_X = 3;
     public static final int NUM_OF_BASES_Y = 3;
-    private static final float BONUS_SPAWN_INTEVAL = 2;
+    private static final float BONUS_SPAWN_INTEVAL = 1;
     private static final int MAX_BONUSES_ON_FIELD = 3;
 
     public interface GameEventListener {
@@ -77,6 +75,8 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
                     }
                 } else if (currentBonus.getBonusType() == Bonus.BONUS_TYPE_HEALTH) {
                     player.addLives(1);
+                } else if (currentBonus.getBonusType() == Bonus.BONUS_TYPE_COIN) {
+                    GameProgress.currentGold += 1;
                 }
 
                 currentBonus.release();
@@ -142,7 +142,17 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
             }
         } while (targetNonEmpty);
 
-        bonuses.add(Bonus.Create(fx, fy, MathUtils.random(3) == 0 ? Bonus.BONUS_TYPE_HEALTH : Bonus.BONUS_TYPE_ATTACK, game.res));
+        // 1/8 change for health, 1/3 change for coin, rest attack
+        int rnd = MathUtils.random(7);
+        byte activeBonus = Bonus.BONUS_TYPE_ATTACK;
+        if (rnd > 6) {
+            activeBonus = Bonus.BONUS_TYPE_HEALTH;
+        }
+        else if (rnd > 4) {
+            activeBonus = Bonus.BONUS_TYPE_COIN;
+        }
+
+        bonuses.add(Bonus.create(fx, fy, activeBonus, game.res));
         lastBonusSpawnTime = gameTime;
     }
 

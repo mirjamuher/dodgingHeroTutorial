@@ -1,6 +1,7 @@
 package com.mirjamuher.dodginghero.logic.objects;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.mirjamuher.dodginghero.logic.GameProgress;
 
 public class Character extends Sprite {
     public static final float BLINK_TIME_AFTER_DMG = 0.25f;
@@ -13,7 +14,6 @@ public class Character extends Sprite {
         this.lives = lives;
         timeAlive = 0;
         timeDmgWasTaken = -1;
-
     }
 
     public int getLives() {
@@ -26,6 +26,7 @@ public class Character extends Sprite {
         if (lives <= 0) {
             lives = 0;
         }
+        GameProgress.playerLives = lives;
     }
 
     public void update(float delta) {

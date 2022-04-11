@@ -46,6 +46,7 @@ public class Player extends Character {
         if (lives > max_lives) {
             lives = max_lives;
         }
+        GameProgress.playerLives = lives;
     }
 
     public void markVictorious() {

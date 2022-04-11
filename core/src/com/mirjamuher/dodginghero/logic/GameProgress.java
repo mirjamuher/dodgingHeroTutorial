@@ -9,6 +9,7 @@ public class GameProgress {
     public static int playerDamage = 1;
     public static int currentLevel = 0;
     public static int currentCharacter = 0;
+    public static int currentGold = 0;
 
     // Gdx Persistance files are basic key-value storage files which work for small games. For bigger games, you need binary files
     // below defines keys, right side is understood as filename, will be saved correctly automatically
@@ -17,6 +18,7 @@ public class GameProgress {
     private static final String SAVE_KEY_LIVES_MAX = "livemax";
     private static final String SAVE_KEY_CURRENT_LEVEL = "currentlevel";
     private static final String SAVE_KEY_PLAYER_DAMAGE = "playerdamage";
+    private static final String SAVE_KEY_PLAYER_GOLD = "playergold";
 
     public static int getEnemyLives() {
         return 3 + currentLevel * 2;
@@ -28,6 +30,7 @@ public class GameProgress {
         prefs.putInteger(SAVE_KEY_LIVES_MAX, maxPlayerLives);
         prefs.putInteger(SAVE_KEY_CURRENT_LEVEL, currentLevel);
         prefs.putInteger(SAVE_KEY_PLAYER_DAMAGE, playerDamage);
+        prefs.putInteger(SAVE_KEY_PLAYER_GOLD, currentGold);
         prefs.flush();  // very important to ensure values are persisted
     }
 
@@ -39,6 +42,7 @@ public class GameProgress {
         maxPlayerLives = prefs.getInteger(SAVE_KEY_LIVES_MAX, 3);
         currentLevel = prefs.getInteger(SAVE_KEY_CURRENT_LEVEL, 0);
         playerDamage = prefs.getInteger(SAVE_KEY_PLAYER_DAMAGE, 1);
+        currentGold = prefs.getInteger(SAVE_KEY_PLAYER_GOLD, 0);
     }
 
     public static void Reset() {
