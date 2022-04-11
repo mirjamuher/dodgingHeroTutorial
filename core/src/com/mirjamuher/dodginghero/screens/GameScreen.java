@@ -1,6 +1,5 @@
 package com.mirjamuher.dodginghero.screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -9,8 +8,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.mirjamuher.dodginghero.DodgingHero;
@@ -23,7 +26,7 @@ import com.mirjamuher.dodginghero.logic.GameProgress;
 import com.mirjamuher.dodginghero.logic.objects.Bonus;
 import com.mirjamuher.dodginghero.logic.objects.Player;
 
-public class GameScreen extends DefaultScreen implements InputProcessor, GameLogic.GameEventListener {
+public class GameScreen extends DefaultScreen implements GameLogic.GameEventListener {
     SpriteBatch batch;
 
     // 8 tile height & 12 tile width
@@ -41,12 +44,13 @@ public class GameScreen extends DefaultScreen implements InputProcessor, GameLog
     private Stage gameStage;
     private Background bg;
     private Player player;
+    private ImageButton sndBtn;
 
     // fade timers
     public static final float GAME_FADEIN = 0.5f;
     public static final float GAME_FADEOUT = 0.5f;
 
-    public GameScreen(DodgingHero game) {
+    public GameScreen(final DodgingHero game) {
         super(game);
         batch = new SpriteBatch();  // responsible for sending command to the video card (e.g. rendering things)
 
@@ -62,11 +66,46 @@ public class GameScreen extends DefaultScreen implements InputProcessor, GameLog
         // create sprite objects
         bg = new Background();
 
+        // initialise sound buttons
+        sndBtn = new ImageButton(game.res.soundBtn[GameProgress.soundVolume]);
+        sndBtn.setPosition(gameStage.getWidth() - sndBtn.getWidth() - 10, 10);
+        sndBtn.addListener(new ClickListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                SoundManager.adjustVolume();
+                sndBtn.getStyle().imageUp = game.res.soundBtn[GameProgress.soundVolume]; // sets the button to look unpressed with new sound icon
+                super.touchUp(event, x, y, pointer, button); // resets functionality to unpressed
+            }
+        });
+        gameStage.addActor(sndBtn);
+
         // play bg-music
         SoundManager.playBattleMusic();
 
+        // add listener to this gamestage
+        gameStage.addListener(new InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                switch (keycode) {
+                    case Input.Keys.UP:
+                        attemptMove(0, 1);
+                        break;
+                    case Input.Keys.DOWN:
+                        attemptMove(0, -1);
+                        break;
+                    case Input.Keys.RIGHT:
+                        attemptMove(1, 0);
+                        break;
+                    case Input.Keys.LEFT:
+                        attemptMove(-1, 0);
+                        break;
+                }
+                return false;
+            }
+        });
+
         // tell gdx that GameScreen handels user input
-        Gdx.input.setInputProcessor(this);
+        Gdx.input.setInputProcessor(gameStage);
 
         // add fade-in when screen starts
         gameStage.addAction(
@@ -238,60 +277,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor, GameLog
         } else if (bonusType == Bonus.BONUS_TYPE_HEALTH) {
             SoundManager.playHealSound();
         }
-    }
-
-    @Override
-    public boolean keyDown(int keycode) {
-        switch (keycode) {
-            case Input.Keys.UP:
-                attemptMove(0, 1);
-                break;
-            case Input.Keys.DOWN:
-                attemptMove(0, -1);
-                break;
-            case Input.Keys.RIGHT:
-                attemptMove(1, 0);
-                break;
-            case Input.Keys.LEFT:
-                attemptMove(-1, 0);
-                break;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(float amountX, float amountY) {
-        return false;
     }
 
     @Override

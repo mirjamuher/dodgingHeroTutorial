@@ -5,6 +5,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.MathUtils;
+import com.mirjamuher.dodginghero.logic.GameProgress;
 
 public class SoundManager {
     /*
@@ -43,7 +44,7 @@ public class SoundManager {
     private static void playSoundRandomVolume(Sound sound, float min, float max) {
         // to make the game seem more varied, play sounds at random volumes
         if (sound != null) {
-            sound.play(MathUtils.random(min, max));
+            sound.play(MathUtils.random(min, max) * GameProgress.soundVolume / GameProgress.MAX_SOUND_VOLUME); // adjust its (0%, 33%, 66%, 100%)
         }
     }
 
@@ -77,6 +78,14 @@ public class SoundManager {
     public static void playBattleMusic() {
         bMusic = Gdx.audio.newMusic(Gdx.files.internal("music/soundtrack.mp3"));
         bMusic.setLooping(true);
+        bMusic.setVolume((float)GameProgress.soundVolume / GameProgress.MAX_SOUND_VOLUME);
         bMusic.play();
+    }
+
+    public static void adjustVolume() {
+        GameProgress.ToggleVolume();
+        if (bMusic != null) {
+            bMusic.setVolume((float)GameProgress.soundVolume / GameProgress.MAX_SOUND_VOLUME);
+        }
     }
 }

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mirjamuher.dodginghero.logic.objects.CharacterRecord;
 
 import java.util.HashMap;
@@ -18,6 +19,8 @@ public class Resources {
     public Sprite attackBonus;
     public Sprite healthBonus;
     public Sprite coinBonus;
+
+    public TextureRegionDrawable soundBtn[];
 
     public BitmapFont gameFont;
 
@@ -67,6 +70,12 @@ public class Resources {
         enemySprites.put(ATTACK_DIAGONAL, gameSprites.createSprite("bat"));
         enemySprites.put(ATTACK_RANDOM, gameSprites.createSprite("slime"));
         enemySprites.put(ATTACK_ULTIMATE, gameSprites.createSprite("skeleton"));
+
+        // sound config images
+        soundBtn = new TextureRegionDrawable[4];
+        for (int i = 0; i < 4; i++) {
+            soundBtn[i] = new TextureRegionDrawable(gameSprites.findRegion("sound" + i));
+        }
     }
 
     public void dispose() {
