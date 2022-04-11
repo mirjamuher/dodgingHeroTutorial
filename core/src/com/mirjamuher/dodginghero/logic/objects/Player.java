@@ -20,7 +20,7 @@ public class Player extends Character {
         super(lives);
         baseNumX = fx;
         baseNumY = fy;
-        set(res.player); // makes this sprite a copy in every way of specified sprite
+        set(res.playerSprites.get(CharacterRecord.CHARACTERS[GameProgress.currentCharacter].name)); // makes this sprite a copy in every way of specified sprite
         max_lives = GameProgress.maxPlayerLives;
     }
 
