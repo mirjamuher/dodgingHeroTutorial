@@ -26,6 +26,12 @@ public class Resources {
 
     // Enemy Sprites
     public Sprite enemy;
+    public HashMap<Integer, Sprite> enemySprites;
+    public static final int ATTACK_VERTICAL = 0;  // spider
+    public static final int ATTACK_HORIZONAL = 1;  // ghost
+    public static final int ATTACK_DIAGONAL = 2;  // bat
+    public static final int ATTACK_RANDOM = 3;  // slime
+    public static final int ATTACK_ULTIMATE = 4;  // skeleton
 
     public static final int TILE_SIZE = 16;
 
@@ -53,6 +59,12 @@ public class Resources {
 
         // enemy initialisation
         enemy = new Sprite(gameSprites.findRegion("spider"));
+        enemySprites = new HashMap<>();
+        enemySprites.put(ATTACK_VERTICAL, gameSprites.createSprite("spider"));
+        enemySprites.put(ATTACK_HORIZONAL, gameSprites.createSprite("ghost"));
+        enemySprites.put(ATTACK_DIAGONAL, gameSprites.createSprite("bat"));
+        enemySprites.put(ATTACK_RANDOM, gameSprites.createSprite("slime"));
+        enemySprites.put(ATTACK_ULTIMATE, gameSprites.createSprite("skeleton"));
     }
 
     public void dispose() {

@@ -94,7 +94,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor, GameLog
         // First draw background, then the stage, then effects
         bg.draw(gameStage, game.res);
         drawBases();
-        gameLogic.getEffectEngine().draw(batch, sizeEvaluator);
 
         // draw sprites
         batch.begin();
@@ -104,6 +103,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor, GameLog
         player.draw(batch, sizeEvaluator);
         gameLogic.getEnemy().draw(batch, sizeEvaluator);  // logic will be swapping enemies, that's why we just get enemy here
         batch.end();
+
+        // draw effects above player and other sprites
+        gameLogic.getEffectEngine().draw(batch, sizeEvaluator);
 
         // center camera
         gameStage.getCamera().position.set(gameStage.getWidth() / 2, gameStage.getHeight() / 2, 0);

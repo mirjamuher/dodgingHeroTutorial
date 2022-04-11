@@ -3,6 +3,7 @@ package com.mirjamuher.dodginghero.logic;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.math.MathUtils;
 import com.mirjamuher.dodginghero.DodgingHero;
+import com.mirjamuher.dodginghero.Resources;
 import com.mirjamuher.dodginghero.graph.effects.EffectEngine;
 import com.mirjamuher.dodginghero.graph.effects.WarningEffect;
 import com.mirjamuher.dodginghero.logic.objects.Bonus;
@@ -38,7 +39,7 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
         this.game = game;
         // generates player at a random location of the tiles
         player = new Player(MathUtils.random(NUM_OF_BASES_X), MathUtils.random(NUM_OF_BASES_Y), game.res, GameProgress.playerLives);
-        enemy = new Enemy(game.res, this);
+        enemy = new Enemy(game.res, this, MathUtils.random(game.res.enemySprites.size() - 1)); // generates a random enemy
         effectEngine = new EffectEngine();
         gameEventListener = listener;
 
