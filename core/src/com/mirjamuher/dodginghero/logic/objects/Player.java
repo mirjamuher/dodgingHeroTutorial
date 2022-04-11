@@ -53,6 +53,7 @@ public class Player extends Character {
         // shows that player has won
         winning = true;
         winTime = timeAlive;
+        GameProgress.playerLives = lives;
     }
 
     public void draw(SpriteBatch batch, SizeEvaluator sizeEvaluator) {

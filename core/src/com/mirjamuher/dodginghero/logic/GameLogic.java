@@ -20,7 +20,7 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
 
     public interface GameEventListener {
         // when game ends, onGameEnd will notify others of that fact
-        void onGameEnd(boolean playerWon);
+        void onGameEnd(final boolean playerWon);
     }
 
     float gameTime;
@@ -173,6 +173,7 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
         if (effect.getFieldX() == player.getBaseNumX() && effect.getFieldY() == player.getBaseNumY()) {
             player.takeDamage(GameProgress.getEnemyDamange());
             if (player.getLives() <= 0) {
+                gameEventListener.onGameEnd(false);
                 GameProgress.Reset(true);  // reset level player is at when he dies
             }
         }

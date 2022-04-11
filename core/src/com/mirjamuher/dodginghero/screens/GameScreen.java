@@ -1,5 +1,6 @@
 package com.mirjamuher.dodginghero.screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -193,7 +194,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor, GameLog
     }
 
     @Override
-    public void onGameEnd(boolean playerWon) {
+    public void onGameEnd(final boolean playerWon) {
         gameStage.addAction(
                 Actions.sequence(  // allows multiple actions
                         // add actions to actors. in this project we have Sprites, not actors, so this is a bit more cumbersome than it needs to be
@@ -213,7 +214,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor, GameLog
                             @Override
                             public boolean act(float delta) {
                                 dispose(); // disposes current screen
-                                game.setScreen(new GameScreen(game));
+                                if (playerWon) {
+                                    game.setScreen(new GameScreen(game));
+                                } else {
+                                    game.setScreen(new CharacterSelectionScreen(game));
+                                }
                                 return true;
                             }
                         }

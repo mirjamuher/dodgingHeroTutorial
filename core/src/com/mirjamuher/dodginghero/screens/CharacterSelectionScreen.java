@@ -64,6 +64,7 @@ public class CharacterSelectionScreen extends DefaultScreen {
             startButton.addListener(new ClickListener() {
                 @Override
                 public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                    GameProgress.Reset(false);  // resetting lives of player
                     dispose(); // dispose character selection screen
                     game.setScreen(new GameScreen(game));
                 }
