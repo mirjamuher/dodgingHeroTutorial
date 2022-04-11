@@ -43,7 +43,7 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
         gameEventListener = listener;
 
         bonuses = new ArrayList<Bonus>();
-        BONUS_SPAWN_INTEVAL = 2f * (GameProgress.getPlayerBonusReduction());
+        BONUS_SPAWN_INTEVAL = 2.0f * (GameProgress.getPlayerBonusReduction());
         gameTime = 0;
         lastBonusSpawnTime = 0;
     }
@@ -69,7 +69,7 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
                     enemy.takeDamage(GameProgress.getPlayerDamage());
                     // if win game condition fulfilled
                     if (enemy.getLives() <= 0) {
-                        GameProgress.currentLevel += 1;
+                        GameProgress.increaseStage();
                         GameProgress.playerLives = player.getLives();
                         player.markVictorious();
                         gameEventListener.onGameEnd(true);
@@ -171,9 +171,9 @@ public class GameLogic implements Enemy.EnemyAttackListener, WarningEffect.Warni
     public void onEffectOver(WarningEffect effect) {
         // when effect is over, if the effect is where the player is, player takes damage
         if (effect.getFieldX() == player.getBaseNumX() && effect.getFieldY() == player.getBaseNumY()) {
-            player.takeDamage(1);
+            player.takeDamage(GameProgress.getEnemyDamange());
             if (player.getLives() <= 0) {
-                GameProgress.Reset();
+                GameProgress.Reset(true);  // reset level player is at when he dies
             }
         }
     }

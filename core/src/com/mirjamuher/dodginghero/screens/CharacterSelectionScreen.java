@@ -98,7 +98,6 @@ public class CharacterSelectionScreen extends DefaultScreen {
         stat = prepareStatLabel("HEAL: " + GameProgress.getPlayerHealthRestored(), uiStage.getWidth() / 2, stat.getY() - 10, textStyle);
         prepareStatLabel("BND: " + GameProgress.getPlayerBonusReductionValue(), uiStage.getWidth() / 2, stat.getY() - 10, textStyle);
 
-
         // add levels
         int lvl = GameProgress.levels[GameProgress.currentCharacter];
         Label statusText = new Label(lvl > 0 ? "LVL" + lvl : "LOCKED", textStyle);
@@ -115,6 +114,7 @@ public class CharacterSelectionScreen extends DefaultScreen {
                 if (GameProgress.currentCharacter == CharacterRecord.CHARACTERS.length) {
                     GameProgress.currentCharacter = 0;
                 }
+                GameProgress.Reset(false); // reset player lives to max without resetting stages
                 prepareUI();
             }
         });
@@ -129,6 +129,7 @@ public class CharacterSelectionScreen extends DefaultScreen {
                 if (GameProgress.currentCharacter == -1) {
                     GameProgress.currentCharacter = CharacterRecord.CHARACTERS.length - 1;
                 }
+                GameProgress.Reset(false); // reset player lives to max without resetting stages
                 prepareUI();
             }
         });
