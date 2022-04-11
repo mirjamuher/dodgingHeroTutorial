@@ -2,6 +2,7 @@ package com.mirjamuher.dodginghero;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.MathUtils;
 
@@ -21,6 +22,7 @@ public class SoundManager {
     */
 
     public static AssetManager assets = new AssetManager();  // loads files asynchronically, but we're loading them all at once because it's a small project
+    private static Music bMusic = null;
 
     public static void loadSounds() {
         for (int i = 0; i < 3; i++) {
@@ -63,5 +65,18 @@ public class SoundManager {
     public static void playHealSound() {
         Sound s = assets.get("music/heal.ogg", Sound.class);
         playSoundRandomVolume(s, 0.6f, 0.7f);
+    }
+
+    public static void stopBattleMusic() {
+        if (bMusic != null) {
+            bMusic.stop();
+            bMusic = null;
+        }
+    }
+
+    public static void playBattleMusic() {
+        bMusic = Gdx.audio.newMusic(Gdx.files.internal("music/soundtrack.mp3"));
+        bMusic.setLooping(true);
+        bMusic.play();
     }
 }

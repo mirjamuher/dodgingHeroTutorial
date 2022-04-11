@@ -62,6 +62,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor, GameLog
         // create sprite objects
         bg = new Background();
 
+        // play bg-music
+        SoundManager.playBattleMusic();
+
         // tell gdx that GameScreen handels user input
         Gdx.input.setInputProcessor(this);
 
@@ -294,6 +297,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor, GameLog
     @Override
     public void dispose() {
         super.dispose();
+        SoundManager.stopBattleMusic();
         batch.dispose();
         gameStage.dispose();
         Gdx.input.setInputProcessor(null);  // if we move to new screen, this screen no longer handels user input
